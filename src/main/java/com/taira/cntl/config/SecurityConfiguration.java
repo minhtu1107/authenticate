@@ -1,10 +1,5 @@
 package com.taira.cntl.config;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import javax.xml.bind.DatatypeConverter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.taira.cntl.util.StringUtil;
 
 
 @Configuration
@@ -38,12 +35,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			
 			@Override
 			public boolean matches(CharSequence rawPassword, String encodedPassword) {
-				return getHashValue(rawPassword.toString(), "MD5").equals(encodedPassword);
+				return StringUtil.getHashValue(rawPassword.toString(), "MD5").equals(encodedPassword);
 			}
 			
 			@Override
 			public String encode(CharSequence rawPassword) {
-				return getHashValue(rawPassword.toString(), "MD5");
+				return StringUtil.getHashValue(rawPassword.toString(), "MD5");
 			}
 		};
 		
@@ -60,23 +57,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/free/**");
     }
 
+    
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
-	public String getHashValue(String content, String instanceType) {
-		MessageDigest md;
-		byte[] mdBytes;
-		try {
-			md = MessageDigest.getInstance(instanceType);
-			md.update(content.getBytes());
-			mdBytes = md.digest();
-			String password = DatatypeConverter.printHexBinary(mdBytes);
-			return password;
-		} catch (NoSuchAlgorithmException e) {
-			return "";
-		}
-	}
 }

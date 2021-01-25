@@ -1,5 +1,7 @@
 package com.taira.cntl.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -78,17 +82,22 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 	//    	return new InMemoryTokenStore();
 	    }
 	
-//	    @Bean
-//	    public TokenEnhancer tokenEnhancer() {
-//	        return new CustomTokenEnhancer();
-//	    }
+	    @Bean
+	    public TokenEnhancer tokenEnhancer() {
+	        return new CustomTokenEnhancer();
+	    }
 	    
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+			
+			TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		    tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+		    
 			endpoints
 				.tokenStore(tokenStore())
+				.tokenEnhancer(tokenEnhancerChain)
 //				.tokenEnhancer(tokenEnhancer())
-				.accessTokenConverter(accessTokenConverter())
+//				.accessTokenConverter(accessTokenConverter())
 				.authenticationManager(authenticationManager);;
 		}
 		
