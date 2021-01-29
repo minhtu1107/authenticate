@@ -14,8 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.taira.cntl.entity.User;
 import com.taira.cntl.persistent.UserRepository;
 import com.taira.cntl.util.StringUtil;
@@ -40,9 +38,8 @@ public class CustomApiAuthenticationProvider implements AuthenticationProvider {
 	        if(u.getPassword().equals(StringUtil.getHashValue(password, "MD5"))) {
 				Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-				Gson gson = new GsonBuilder().create();
 				
-				return new UsernamePasswordAuthenticationToken(gson.toJson(userDto), gson.toJson(userDto), grantedAuthorities);
+				return new UsernamePasswordAuthenticationToken(userDto, userDto, grantedAuthorities);
 	        } else {
 	        	throw new BadCredentialsException("Wrong password");
 	        }
