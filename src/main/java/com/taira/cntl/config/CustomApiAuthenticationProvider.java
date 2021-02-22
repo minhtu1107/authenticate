@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.taira.cntl.dto.UserDTO;
 import com.taira.cntl.entity.User;
 import com.taira.cntl.persistent.UserRepository;
 import com.taira.cntl.util.StringUtil;
@@ -31,13 +32,19 @@ public class CustomApiAuthenticationProvider implements AuthenticationProvider {
         
         User u = userRepo.findByEmail(username);
         if(u!=null) {
-	        User userDto = new User();
+	        UserDTO userDto = new UserDTO();
 	        userDto.setEmail(u.getEmail());
 	        userDto.setId(u.getId());
 	        
 	        if(u.getPassword().equals(StringUtil.getHashValue(password, "MD5"))) {
 				Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+				if(u.getId()==1) {
+					grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+					userDto.setRole("ROLE_ADMIN");
+				} else {
+					grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+					userDto.setRole("ROLE_USER");
+				}
 				
 				return new UsernamePasswordAuthenticationToken(userDto, userDto, grantedAuthorities);
 	        } else {

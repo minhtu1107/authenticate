@@ -1,5 +1,7 @@
 package com.taira.cntl.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -11,9 +13,9 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "users", catalog = "cntl")
+@Table(name = "users")
 @Data
-public class User implements Serializable{
+public class User implements Serializable {
 
 	/**
 	 * 
@@ -21,7 +23,7 @@ public class User implements Serializable{
 	private static final long serialVersionUID = 7830157057217549427L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "user_id", unique = true, nullable = false)
 	private Integer id;
 	
