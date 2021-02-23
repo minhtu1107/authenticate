@@ -1,6 +1,6 @@
 package com.taira.cntl.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +38,8 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/getAllUsers", headers = "Accept=application/json")
-	public List<UserDTO> getAllUsers() {
-		return userService.getAllUsers();
+	public Map<String, Object> getAllUsers(@RequestParam(defaultValue = "-1") Integer page) {
+		return userService.getAllUsers(page);
 	}
 	
 	@PutMapping(value = "/addUser", headers = "Accept=application/json")

@@ -1,7 +1,6 @@
 package com.taira.cntl.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,17 +28,8 @@ public class UserService {
 		return test;
 	}
 	
-	public List<UserDTO> getAllUsers() {
-		List<UserDTO> users = new ArrayList<UserDTO>();
-		try {
-			Iterable<User> u = userRepo.findAll();
-			u.forEach(c -> {
-				UserDTO d = new UserDTO(c);
-				users.add(d);
-			});
-		} catch (Exception e) {
-		}
-		return users;
+	public Map<String, Object> getAllUsers(Integer page) {
+		return userRepo.getAllUser(page);
 	}
 	
 	public UserDTO addUser(User u) {
