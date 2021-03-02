@@ -1,6 +1,7 @@
 package com.taira.cntl.service;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,5 +49,20 @@ public class UserService {
 		} catch (Exception e) {
 			return 500;
 		}
+	}
+	
+	public boolean isAdmin(String email) {
+		boolean ret = false;
+		try {
+			Optional<User> optionalUser = userRepo.findById(1);
+			if(optionalUser.isPresent()) {
+				User u = optionalUser.get();
+				if(u!=null && u.getEmail().equalsIgnoreCase(email.trim())) {
+					ret = true;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return ret;
 	}
 }

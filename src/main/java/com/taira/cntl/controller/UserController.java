@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +52,12 @@ public class UserController {
 	@DeleteMapping(value = "/removeUser", headers = "Accept=application/json")
 	public ResponseEntity<Integer> removeUser(@RequestParam Integer id) {
 		Integer errorCode = userService.removeUser(id);
+		return ResponseEntity.ok().body(errorCode);
+	}
+	
+	@PostMapping(value = "/secure/grantPermission", headers = "Accept=application/json")
+	public ResponseEntity<Boolean> grantPermission(@RequestBody String[] email) {
+		Boolean errorCode = userService.isAdmin(email[0]);
 		return ResponseEntity.ok().body(errorCode);
 	}
 }
