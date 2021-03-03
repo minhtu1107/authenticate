@@ -57,7 +57,10 @@ public class UserController {
 	
 	@PostMapping(value = "/secure/grantPermission", headers = "Accept=application/json")
 	public ResponseEntity<Boolean> grantPermission(@RequestBody String[] email) {
-		Boolean errorCode = userService.isAdmin(email[0]);
+		Boolean errorCode = false;
+		if(email.length>0) {
+			errorCode = userService.isAdmin(email[0]);
+		}
 		return ResponseEntity.ok().body(errorCode);
 	}
 }
