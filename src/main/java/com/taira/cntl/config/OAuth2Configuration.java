@@ -31,6 +31,10 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 	@Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+		
+		@Autowired
+		private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
 		@Override
         public void configure(HttpSecurity http) throws Exception {
 
@@ -40,7 +44,7 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/oauth/logout")
-//                .logoutSuccessHandler(customLogoutSuccessHandler)
+                .logoutSuccessHandler(customLogoutSuccessHandler)
                 .and()
                 .csrf()
                 .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
